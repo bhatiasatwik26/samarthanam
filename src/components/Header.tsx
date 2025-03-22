@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -33,15 +32,21 @@ export const Header = () => {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4',
         isScrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-soft dark:bg-event-darkest-gray/90'
+          ? 'bg-white/90 backdrop-blur-md shadow-soft dark:bg-gray-900/90'
           : 'bg-transparent'
       )}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="text-event-dark-blue font-serif text-2xl font-bold">
-              Samarthanam
+            <Link to="/" className="flex items-center">
+              <div className="bg-red-50 dark:bg-red-900/20 p-2 rounded-lg overflow-hidden">
+                <img 
+                  src="/images/logo_for_site.jpg" 
+                  alt="Samarthanam Trust for the Disabled" 
+                  className="h-20 md:h-28 w-auto rounded-md"
+                />
+              </div>
             </Link>
           </div>
 
@@ -51,7 +56,7 @@ export const Header = () => {
               link.isButton ? (
                 <Button
                   key={link.name}
-                  className="rounded-full px-6 py-2 bg-event-blue hover:bg-event-dark-blue text-white transition-all"
+                  className="rounded-full px-6 py-2 bg-red-600 hover:bg-red-800 text-white transition-all"
                 >
                   {link.name}
                 </Button>
@@ -59,7 +64,7 @@ export const Header = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-event-dark-gray font-medium hover:text-event-blue transition-colors relative animated-border after:bottom-[-4px]"
+                  className="text-gray-800 dark:text-gray-200 font-medium hover:text-red-600 dark:hover:text-red-400 transition-colors relative animated-border after:bottom-[-4px]"
                 >
                   {link.name}
                 </Link>
@@ -69,7 +74,7 @@ export const Header = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-event-dark-gray hover:text-event-blue transition-colors"
+            className="md:hidden text-gray-800 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -85,7 +90,7 @@ export const Header = () => {
                 link.isButton ? (
                   <Button
                     key={link.name}
-                    className="rounded-full px-6 py-2 bg-event-blue hover:bg-event-dark-blue text-white transition-all w-full"
+                    className="rounded-full px-6 py-2 bg-red-600 hover:bg-red-800 text-white transition-all w-full"
                   >
                     {link.name}
                   </Button>
@@ -93,7 +98,7 @@ export const Header = () => {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-event-dark-gray font-medium hover:text-event-blue transition-colors py-2"
+                    className="text-gray-800 dark:text-gray-200 font-medium hover:text-red-600 dark:hover:text-red-400 transition-colors py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}

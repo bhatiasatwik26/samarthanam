@@ -1,4 +1,3 @@
-
 import { useInView } from '@/lib/animate';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -32,7 +31,7 @@ const EventHero = ({
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-event-darkest-gray/60 to-event-darkest-gray/80 mix-blend-multiply z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/80 mix-blend-multiply z-10"></div>
         <img
           src={imageUrl}
           alt={title}
@@ -48,7 +47,7 @@ const EventHero = ({
             "transition-all duration-700 transform",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
-            <span className="inline-block py-1 px-3 rounded-full bg-event-blue/10 text-event-light-blue text-sm font-medium backdrop-blur-sm border border-event-blue/20 mb-4">
+            <span className="inline-block py-1 px-3 rounded-full bg-red-600/10 text-red-200 text-sm font-medium backdrop-blur-sm border border-red-500/20 mb-4">
               {subtitle}
             </span>
           </div>
@@ -72,15 +71,15 @@ const EventHero = ({
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
             <div className="flex items-center text-white/80">
-              <Calendar size={18} className="mr-2 text-event-blue" />
+              <Calendar size={18} className="mr-2 text-red-500" />
               <span>{date}</span>
             </div>
             <div className="flex items-center text-white/80">
-              <Clock size={18} className="mr-2 text-event-blue" />
+              <Clock size={18} className="mr-2 text-red-500" />
               <span>{time}</span>
             </div>
             <div className="flex items-center text-white/80">
-              <MapPin size={18} className="mr-2 text-event-blue" />
+              <MapPin size={18} className="mr-2 text-red-500" />
               <span>{location}</span>
             </div>
           </div>
@@ -89,7 +88,7 @@ const EventHero = ({
             "flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-400 transform",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
-            <Button className="rounded-full bg-event-blue hover:bg-event-dark-blue text-white px-8 py-6 shadow-md hover:shadow-lg transition-all duration-300 button-hover-effect">
+            <Button className="rounded-full bg-red-600 hover:bg-red-800 text-white px-8 py-6 shadow-md hover:shadow-lg transition-all duration-300 button-hover-effect">
               Register Now
             </Button>
             <Button

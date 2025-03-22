@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useInView } from '@/lib/animate';
 import { Button } from '@/components/ui/button';
@@ -46,17 +45,17 @@ const RegistrationForm = ({
             "text-center mb-16 transition-all duration-700 transform",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
-            <span className="inline-block py-1 px-3 rounded-full bg-event-blue/10 text-event-blue text-sm font-medium mb-4">
+            <span className="inline-block py-1 px-3 rounded-full bg-red-600/10 text-red-600 text-sm font-medium mb-4">
               {subtitle}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-event-darkest-gray mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">
               {title}
             </h2>
-            <div className="w-16 h-1 bg-event-blue mx-auto"></div>
+            <div className="w-16 h-1 bg-red-600 mx-auto"></div>
           </div>
 
           <div className={cn(
-            "bg-event-lightest-gray rounded-xl p-8 shadow-medium transition-all duration-700 transform",
+            "bg-gray-50 rounded-xl p-8 shadow-medium transition-all duration-700 transform",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -67,7 +66,7 @@ const RegistrationForm = ({
                     id="firstName"
                     placeholder="John"
                     required
-                    className="rounded-md border-event-light-gray/50 focus:border-event-blue focus:ring-event-blue/20"
+                    className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -76,7 +75,7 @@ const RegistrationForm = ({
                     id="lastName"
                     placeholder="Doe"
                     required
-                    className="rounded-md border-event-light-gray/50 focus:border-event-blue focus:ring-event-blue/20"
+                    className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20"
                   />
                 </div>
               </div>
@@ -89,7 +88,7 @@ const RegistrationForm = ({
                     type="email"
                     placeholder="john.doe@example.com"
                     required
-                    className="rounded-md border-event-light-gray/50 focus:border-event-blue focus:ring-event-blue/20"
+                    className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -99,7 +98,7 @@ const RegistrationForm = ({
                     type="tel"
                     placeholder="+1 (555) 000-0000"
                     required
-                    className="rounded-md border-event-light-gray/50 focus:border-event-blue focus:ring-event-blue/20"
+                    className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20"
                   />
                 </div>
               </div>
@@ -107,7 +106,7 @@ const RegistrationForm = ({
               <div className="space-y-2">
                 <Label htmlFor="participationType">Participation Type</Label>
                 <Select>
-                  <SelectTrigger className="rounded-md border-event-light-gray/50 focus:border-event-blue focus:ring-event-blue/20">
+                  <SelectTrigger className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20">
                     <SelectValue placeholder="Select participation type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -125,14 +124,14 @@ const RegistrationForm = ({
                   id="message"
                   rows={3}
                   placeholder="Tell us any additional information we should know..."
-                  className="w-full rounded-md border border-event-light-gray/50 p-3 focus:border-event-blue focus:ring-event-blue/20 focus:outline-none"
+                  className="w-full rounded-md border border-gray-300/50 p-3 focus:border-red-600 focus:ring-red-600/20 focus:outline-none"
                 />
               </div>
 
               <div className="flex items-start space-x-2">
-                <Checkbox id="terms" className="mt-1 data-[state=checked]:bg-event-blue data-[state=checked]:border-event-blue" />
-                <Label htmlFor="terms" className="text-sm text-event-medium-gray">
-                  I agree to the <a href="#" className="text-event-blue hover:underline">terms and conditions</a> and the <a href="#" className="text-event-blue hover:underline">privacy policy</a>.
+                <Checkbox id="terms" className="mt-1 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600" />
+                <Label htmlFor="terms" className="text-sm text-gray-600">
+                  I agree to the <a href="#" className="text-red-600 hover:underline">terms and conditions</a> and the <a href="#" className="text-red-600 hover:underline">privacy policy</a>.
                 </Label>
               </div>
 
@@ -140,7 +139,7 @@ const RegistrationForm = ({
                 type="submit"
                 disabled={loading}
                 className={cn(
-                  "w-full rounded-md bg-event-blue hover:bg-event-dark-blue text-white py-6 transition-all duration-300",
+                  "w-full rounded-md bg-red-600 hover:bg-red-800 text-white py-6 transition-all duration-300",
                   loading && "opacity-70 cursor-not-allowed"
                 )}
               >

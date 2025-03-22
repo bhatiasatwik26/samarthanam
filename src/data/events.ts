@@ -23,7 +23,7 @@ export const events: Event[] = [
     date: "October 15, 2023",
     time: "8:00 AM - 12:00 PM",
     location: "Central Park, New York",
-    imageUrl: "https://images.unsplash.com/photo-1610799197329-86ef5eb6a6c7?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "8:00 AM",
@@ -55,7 +55,7 @@ export const events: Event[] = [
     date: "November 5-7, 2023",
     time: "Starts at 6:00 PM",
     location: "Tech Hub, San Francisco",
-    imageUrl: "https://images.unsplash.com/photo-1559223607-a43c990c692c?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/7102/notes-macbook-study-conference.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "6:00 PM",
@@ -87,7 +87,7 @@ export const events: Event[] = [
     date: "December 10, 2023",
     time: "7:00 PM - 10:00 PM",
     location: "Grand Auditorium, Chicago",
-    imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "6:00 PM",
@@ -119,7 +119,7 @@ export const events: Event[] = [
     date: "January 20, 2024",
     time: "10:00 AM - 5:00 PM",
     location: "Community Center, Seattle",
-    imageUrl: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/5748516/pexels-photo-5748516.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "10:00 AM",
@@ -151,7 +151,7 @@ export const events: Event[] = [
     date: "February 15-17, 2024",
     time: "9:00 AM - 4:00 PM daily",
     location: "University Campus, Boston",
-    imageUrl: "https://images.unsplash.com/photo-1532649538693-f3a2ec1bf8bd?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/7648476/pexels-photo-7648476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "Day 1, 9:00 AM",
@@ -183,7 +183,7 @@ export const events: Event[] = [
     date: "March 8, 2024",
     time: "8:00 AM - 3:00 PM",
     location: "Memorial Park, Austin",
-    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/6551144/pexels-photo-6551144.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "8:00 AM",
@@ -215,7 +215,7 @@ export const events: Event[] = [
     date: "April 22-23, 2024",
     time: "11:00 AM - 8:00 PM",
     location: "Downtown Plaza, Miami",
-    imageUrl: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "11:00 AM",
@@ -247,7 +247,7 @@ export const events: Event[] = [
     date: "May 15, 2024",
     time: "10:00 AM - 6:00 PM",
     location: "Convention Center, Denver",
-    imageUrl: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop",
+    imageUrl: "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     scheduleItems: [
       {
         time: "10:00 AM",

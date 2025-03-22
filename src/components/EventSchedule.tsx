@@ -1,4 +1,3 @@
-
 import { useInView } from '@/lib/animate';
 import { cn } from '@/lib/utils';
 
@@ -23,7 +22,7 @@ const EventSchedule = ({
 
   return (
     <section 
-      className="py-20 bg-event-lightest-gray" 
+      className="py-20 bg-gray-50" 
       id="schedule"
       ref={ref}
     >
@@ -33,18 +32,18 @@ const EventSchedule = ({
             "text-center mb-16 transition-all duration-700 transform",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           )}>
-            <span className="inline-block py-1 px-3 rounded-full bg-event-blue/10 text-event-blue text-sm font-medium mb-4">
+            <span className="inline-block py-1 px-3 rounded-full bg-red-600/10 text-red-600 text-sm font-medium mb-4">
               {subtitle}
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-event-darkest-gray mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">
               {title}
             </h2>
-            <div className="w-16 h-1 bg-event-blue mx-auto"></div>
+            <div className="w-16 h-1 bg-red-600 mx-auto"></div>
           </div>
 
           <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-event-blue/20 md:left-1/2 md:-ml-0.5"></div>
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-red-500/20 md:left-1/2 md:-ml-0.5"></div>
 
             {/* Timeline Items */}
             <div className="space-y-12">
@@ -57,18 +56,18 @@ const EventSchedule = ({
                   { "delay-100": index === 0, "delay-200": index === 1, "delay-300": index === 2, "delay-400": index === 3, "delay-500": index >= 4 }
                 )}>
                   <div className="flex items-center md:justify-center mb-2 relative">
-                    <div className="z-10 flex items-center justify-center w-8 h-8 rounded-full bg-event-blue shadow-sm text-white text-xs">
+                    <div className="z-10 flex items-center justify-center w-8 h-8 rounded-full bg-red-600 shadow-sm text-white text-xs">
                       {index + 1}
                     </div>
                     <div className="ml-4 md:ml-0 md:absolute md:left-0 md:w-[calc(50%-2rem)] md:text-right md:pr-8">
-                      <span className="text-event-blue font-medium">{item.time}</span>
+                      <span className="text-red-600 font-medium">{item.time}</span>
                     </div>
                   </div>
 
                   <div className="ml-12 md:ml-0 md:w-[calc(50%-2rem)] md:ml-[calc(50%+2rem)]">
-                    <div className="p-5 rounded-lg bg-white shadow-soft hover:shadow-medium transition-shadow duration-300">
-                      <h3 className="text-xl font-semibold text-event-darkest-gray mb-2">{item.title}</h3>
-                      <p className="text-event-medium-gray">{item.description}</p>
+                    <div className="p-5 rounded-lg bg-white shadow-soft hover:shadow-medium transition-shadow duration-300 border border-gray-100">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+                      <p className="text-gray-600">{item.description}</p>
                     </div>
                   </div>
                 </div>
