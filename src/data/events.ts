@@ -1,4 +1,3 @@
-
 export interface Event {
   id: string;
   title: string;
@@ -109,6 +108,166 @@ export const events: Event[] = [
         time: "9:30 PM",
         title: "Closing Remarks",
         description: "Thank you address and information on how to get involved."
+      }
+    ]
+  },
+  {
+    id: "event-4",
+    title: "Green Earth Sustainability Fair",
+    subtitle: "Eco-Friendly Solutions",
+    description: "A community-oriented fair showcasing sustainable practices, eco-friendly products, and educational workshops. Learn how small changes can have a big impact on our planet's health.",
+    date: "January 20, 2024",
+    time: "10:00 AM - 5:00 PM",
+    location: "Community Center, Seattle",
+    imageUrl: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?q=80&w=1000&auto=format&fit=crop",
+    scheduleItems: [
+      {
+        time: "10:00 AM",
+        title: "Exhibition Opens",
+        description: "Visit booths from local sustainable businesses and organizations."
+      },
+      {
+        time: "11:30 AM",
+        title: "Workshop: Home Composting",
+        description: "Learn how to start and maintain a successful composting system at home."
+      },
+      {
+        time: "1:00 PM",
+        title: "Panel Discussion: Sustainable Cities",
+        description: "Experts discuss how urban areas can become more environmentally friendly."
+      },
+      {
+        time: "3:00 PM",
+        title: "DIY Upcycling Workshop",
+        description: "Turn everyday waste items into useful household products."
+      }
+    ]
+  },
+  {
+    id: "event-5",
+    title: "Youth Leadership Summit",
+    subtitle: "Empowering Future Leaders",
+    description: "A 3-day summit designed to inspire and equip young people with leadership skills, entrepreneurial thinking, and civic engagement knowledge. Open to high school and college students.",
+    date: "February 15-17, 2024",
+    time: "9:00 AM - 4:00 PM daily",
+    location: "University Campus, Boston",
+    imageUrl: "https://images.unsplash.com/photo-1532649538693-f3a2ec1bf8bd?q=80&w=1000&auto=format&fit=crop",
+    scheduleItems: [
+      {
+        time: "Day 1, 9:00 AM",
+        title: "Opening Keynote: The Leader Within",
+        description: "Inspiring talk by renowned youth advocate and entrepreneur."
+      },
+      {
+        time: "Day 1, 1:00 PM",
+        title: "Workshop: Public Speaking",
+        description: "Develop confidence and skills in effective communication."
+      },
+      {
+        time: "Day 2, 10:00 AM",
+        title: "Panel: Young Changemakers",
+        description: "Hear from successful young leaders making a difference."
+      },
+      {
+        time: "Day 3, 2:00 PM",
+        title: "Action Planning Session",
+        description: "Develop a personal leadership action plan to implement in your community."
+      }
+    ]
+  },
+  {
+    id: "event-6",
+    title: "Community Health & Wellness Day",
+    subtitle: "Healthy Living for All",
+    description: "A free event offering health screenings, fitness classes, nutrition education, and wellness resources. Promoting healthy living and accessible healthcare for everyone in our community.",
+    date: "March 8, 2024",
+    time: "8:00 AM - 3:00 PM",
+    location: "Memorial Park, Austin",
+    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1000&auto=format&fit=crop",
+    scheduleItems: [
+      {
+        time: "8:00 AM",
+        title: "Morning Yoga in the Park",
+        description: "Start your day with a rejuvenating yoga session for all levels."
+      },
+      {
+        time: "10:00 AM",
+        title: "Health Screenings Begin",
+        description: "Free blood pressure, diabetes, and basic health screenings."
+      },
+      {
+        time: "12:00 PM",
+        title: "Cooking Demonstration",
+        description: "Learn to prepare quick, nutritious meals on a budget."
+      },
+      {
+        time: "2:00 PM",
+        title: "Family Fitness Challenge",
+        description: "Fun, inclusive activities for families to enjoy together."
+      }
+    ]
+  },
+  {
+    id: "event-7",
+    title: "Cultural Heritage Festival",
+    subtitle: "Celebrating Diversity",
+    description: "A vibrant celebration of our community's diverse cultural heritage featuring traditional music, dance, food, and art from around the world. An opportunity to learn, appreciate, and connect across cultures.",
+    date: "April 22-23, 2024",
+    time: "11:00 AM - 8:00 PM",
+    location: "Downtown Plaza, Miami",
+    imageUrl: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop",
+    scheduleItems: [
+      {
+        time: "11:00 AM",
+        title: "Opening Parade",
+        description: "Traditional costumes and performances from diverse cultures."
+      },
+      {
+        time: "12:30 PM",
+        title: "International Food Court Opens",
+        description: "Sample authentic cuisine from over 20 countries."
+      },
+      {
+        time: "2:00 PM",
+        title: "Cultural Performances",
+        description: "Traditional music and dance showcases on the main stage."
+      },
+      {
+        time: "5:00 PM",
+        title: "Global Artisan Market",
+        description: "Handcrafted items, textiles, and art from around the world."
+      }
+    ]
+  },
+  {
+    id: "event-8",
+    title: "Innovation & Technology Expo",
+    subtitle: "Future Forward",
+    description: "Explore cutting-edge technology innovations and their potential impact on society. Features interactive exhibits, demonstrations, and talks by industry leaders in AI, renewable energy, biotechnology, and more.",
+    date: "May 15, 2024",
+    time: "10:00 AM - 6:00 PM",
+    location: "Convention Center, Denver",
+    imageUrl: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop",
+    scheduleItems: [
+      {
+        time: "10:00 AM",
+        title: "Expo Floor Opens",
+        description: "Interactive exhibits from leading tech companies and startups."
+      },
+      {
+        time: "11:30 AM",
+        title: "Keynote: AI and Human Potential",
+        description: "Visionary talk on how AI can enhance human capabilities."
+      },
+      {
+        time: "2:00 PM",
+        title: "Panel: Ethical Technology",
+        description: "Industry leaders discuss responsible innovation and ethical challenges."
+      },
+      {
+        time: "4:00 PM",
+        title: "Startup Showcase",
+        description: "Emerging tech ventures present their innovative solutions."
       }
     ]
   }
