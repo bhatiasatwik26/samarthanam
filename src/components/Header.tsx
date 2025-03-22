@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,8 +21,8 @@ export const Header = () => {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Events', href: '#' },
+    { name: 'Home', href: '/' },
+    { name: 'Events', href: '/events' },
     { name: 'About', href: '#' },
     { name: 'Contact', href: '#' },
     { name: 'Donate', href: '#', isButton: true },
@@ -39,9 +40,9 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <a href="#" className="text-event-dark-blue font-serif text-2xl font-bold">
+            <Link to="/" className="text-event-dark-blue font-serif text-2xl font-bold">
               Samarthanam
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -55,13 +56,13 @@ export const Header = () => {
                   {link.name}
                 </Button>
               ) : (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-event-dark-gray font-medium hover:text-event-blue transition-colors relative animated-border after:bottom-[-4px]"
                 >
                   {link.name}
-                </a>
+                </Link>
               )
             )}
           </nav>
@@ -89,14 +90,14 @@ export const Header = () => {
                     {link.name}
                   </Button>
                 ) : (
-                  <a
+                  <Link
                     key={link.name}
-                    href={link.href}
+                    to={link.href}
                     className="text-event-dark-gray font-medium hover:text-event-blue transition-colors py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 )
               )}
             </nav>

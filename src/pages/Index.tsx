@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Header from '@/components/Header';
 import EventHero from '@/components/EventHero';
@@ -12,7 +11,6 @@ import Footer from '@/components/Footer';
 import { formatDate } from '@/lib/animate';
 
 const Index = () => {
-  // Make sections animate in as they come into view
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -30,7 +28,6 @@ const Index = () => {
     };
   }, []);
 
-  // Event data
   const eventData = {
     title: "Annual Charity Walkathon 2023",
     subtitle: "Join the Movement",
@@ -83,7 +80,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className="min-h-screen">
       <Header />
       
       <main className="pt-16">
