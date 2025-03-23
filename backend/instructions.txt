@@ -1,0 +1,7 @@
+To run the backend server
+
+/backend -> npm run dev
+
+
+Adding websocket-:
+npm install socket.io
