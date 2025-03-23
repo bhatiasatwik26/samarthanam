@@ -1,13 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -16,10 +15,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 80% 56%;
+    --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 20% 96%;
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
@@ -36,6 +35,14 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    /* Custom colors */
+    --event-red: 0 72% 51%;
+    --event-red-dark: 0 72% 41%;
+    --event-gray: 210 20% 98%;
+    --event-gray-dark: 210 20% 96%;
+    --event-gray-darker: 220 14% 96%;
+    --event-darkest-gray: 220 18% 20%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -95,6 +102,122 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  .font-serif {
+    font-family: "Playfair Display", serif;
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+  }
+}
+
+/* Accessibility Focus Styles */
+*:focus-visible {
+  outline: 3px solid #0ea5e9;
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.dark *:focus-visible {
+  outline-color: #7dd3fc;
+}
+
+/* High Contrast Mode Support */
+@media (forced-colors: active) {
+  * {
+    border-color: CanvasText;
+  }
+  
+  button, a {
+    forced-color-adjust: none;
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+  
+  button:hover, a:hover {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Animation Classes */
+.animated-border {
+  position: relative;
+}
+
+.animated-border::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.animated-border:hover::after {
+  transform: scaleX(1);
+}
+
+/* ARIA Helpers */
+[aria-hidden="true"] {
+  display: none;
+}
+
+[aria-busy="true"] {
+  cursor: wait;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.button-hover-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.button-hover-effect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 0;
+  padding-bottom: 120%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+.button-hover-effect:hover::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.text-balance {
+  text-wrap: balance;
 }
 
 /* Custom Scroll */
@@ -113,24 +236,6 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
-}
-
-/* Animations */
-.animated-border::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.6s ease;
-}
-
-.animated-border:hover::after {
-  transform: scaleX(1);
 }
 
 /* Glass Effects */
@@ -157,20 +262,6 @@
 .section-fade-up.visible > * {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Button Hover Effects */
-.button-hover-effect {
-  @apply relative overflow-hidden;
-}
-
-.button-hover-effect::before {
-  content: '';
-  @apply absolute inset-0 bg-white/20 translate-x-full transition-transform duration-300;
-}
-
-.button-hover-effect:hover::before {
-  @apply translate-x-0;
 }
 
 /* Smooth Page Transitions */

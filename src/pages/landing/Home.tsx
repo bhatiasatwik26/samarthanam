@@ -6,7 +6,7 @@ import EventCountdown from '@/components/EventCountdown';
 import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 
-const Index = () => {
+const Home = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -51,4 +51,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Home; 

@@ -1,7 +1,7 @@
-
 import { useInView } from '@/lib/animate';
-import { Facebook, Twitter, Instagram, Youtube, Heart } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { ref, isVisible } = useInView();
@@ -44,83 +44,109 @@ const Footer = () => {
   ];
 
   return (
-    <footer 
-      className="bg-event-darkest-gray text-white pt-16 pb-8"
-      ref={ref}
-    >
+    <footer className="bg-gray-900 text-white pt-16 pb-8" id="contact">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
-          <div className="md:col-span-2">
-            <div className={cn(
-              "transition-all duration-700 transform",
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-            )}>
-              <h3 className="text-2xl font-serif font-bold mb-4">Samarthanam</h3>
-              <p className="text-white/70 mb-6 max-w-md">
-                Empowering lives through our various initiatives and programs. Join us in our mission to create a more inclusive and supportive society.
-              </p>
-              <div className="flex space-x-4">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    aria-label={link.label}
-                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-colors hover:bg-white/20"
-                  >
-                    <link.icon size={18} />
-                  </a>
-                ))}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          {/* Logo and Short Description */}
+          <div className="col-span-1 md:col-span-1">
+            <Link to="/" className="flex items-start" aria-label="Samarthanam NGO Home">
+              <div className="bg-red-900/20 p-2 rounded-lg overflow-hidden inline-block">
+                <img 
+                  src="/images/logo_for_site.jpg" 
+                  alt="Samarthanam NGO" 
+                  className="h-12 w-auto rounded-md"
+                />
+              </div>
+            </Link>
+            <p className="text-gray-400 mt-4">
+              Empowering people with disabilities through accessible education, employment, and technology.
+            </p>
+            <div className="flex space-x-4 mt-6">
+              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors" aria-label="Facebook">
+                <Facebook size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors" aria-label="Twitter">
+                <Twitter size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors" aria-label="Instagram">
+                <Instagram size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors" aria-label="YouTube">
+                <Youtube size={20} />
+              </a>
+            </div>
+          </div>
+          
+          {/* Quick Links */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Home</Link>
+              </li>
+              <li>
+                <Link to="#about" className="text-gray-400 hover:text-red-500 transition-colors">About Us</Link>
+              </li>
+              <li>
+                <Link to="#events" className="text-gray-400 hover:text-red-500 transition-colors">Events</Link>
+              </li>
+              <li>
+                <Link to="#help" className="text-gray-400 hover:text-red-500 transition-colors">How To Help</Link>
+              </li>
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Donate</Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Legal */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-bold mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Terms & Conditions</Link>
+              </li>
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Cookie Policy</Link>
+              </li>
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-red-500 transition-colors">Accessibility Statement</Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Contact Information */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-bold mb-4">Contact Us</h3>
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <MapPin size={20} className="text-red-500 mr-3 mt-1 flex-shrink-0" />
+                <p className="text-gray-400">123 NGO Street, Bangalore, Karnataka 560001, India</p>
+              </div>
+              <div className="flex items-center">
+                <Phone size={20} className="text-red-500 mr-3 flex-shrink-0" />
+                <a href="tel:+919876543210" className="text-gray-400 hover:text-red-500 transition-colors">+91 98765 43210</a>
+              </div>
+              <div className="flex items-center">
+                <Mail size={20} className="text-red-500 mr-3 flex-shrink-0" />
+                <a href="mailto:info@samarthanam.org" className="text-gray-400 hover:text-red-500 transition-colors">info@samarthanam.org</a>
               </div>
             </div>
           </div>
-
-          {footerLinks.map((section, index) => (
-            <div 
-              key={section.title}
-              className={cn(
-                "transition-all duration-700 transform",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12",
-                { "delay-100": index === 0, "delay-200": index === 1, "delay-300": index === 2 }
-              )}
-            >
-              <h4 className="text-lg font-medium mb-4">{section.title}</h4>
-              <ul className="space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-white/70 hover:text-white transition-colors text-sm"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
-
-        <div className={cn(
-          "border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center transition-all duration-700 transform",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-        )}>
-          <p className="text-white/60 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Samarthanam. All rights reserved.
-          </p>
-          <div className="flex items-center text-white/60 text-sm">
-            <a href="#" className="hover:text-white transition-colors mr-6">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors mr-6">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+        
+        <div className="border-t border-gray-800 pt-8 mt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 text-sm mb-4 md:mb-0">
+              © {new Date().getFullYear()} Samarthanam NGO. All rights reserved.
+            </p>
+            <p className="text-gray-500 text-sm">
+              Designed with ❤️ for accessibility
+            </p>
           </div>
-        </div>
-
-        <div className={cn(
-          "text-center mt-8 text-white/40 text-xs transition-all duration-700 transform",
-          isVisible ? "opacity-100 translate-y-0 delay-200" : "opacity-0 translate-y-12"
-        )}>
-          <p className="flex items-center justify-center">
-            Made with <Heart size={12} className="mx-1 text-red-400" /> for community impact
-          </p>
         </div>
       </div>
     </footer>
