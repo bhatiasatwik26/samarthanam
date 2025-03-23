@@ -4,6 +4,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
 import { events as allEvents } from "@/data/events";
+import { updateUserActivity } from "@/services/activityApi";
+import { updateLoginStreak } from "@/services/streakService";
 
 // Import all subcomponents through the barrel file
 import { 
@@ -11,7 +13,10 @@ import {
   AchievementBadges, 
   TaskSummary, 
   EventCard, 
-  Heatmap 
+  Heatmap,
+  RegisteredEventsSection,
+  Leaderboard,
+  StreakDisplay
 } from "@/pages/volunteer/components";
 
 // Mock data for development
@@ -28,6 +33,23 @@ const Demo_user = {
   subscribedEventIds: ["event-1", "event-3", "event-5"],
 };
 
+// Mock event tasks for development
+const Demo_event_tasks = {
+  "event-1": [
+    { id: "task-1", name: "Give water", deadline: "12/31/2024", status: "completed" },
+    { id: "task-2", name: "Drink Give water", deadline: "2/18/2025", status: "pending" },
+  ],
+  "event-3": [
+    { id: "task-3", name: "Distribute bikes", deadline: "3/5/2025", status: "completed" },
+    { id: "task-4", name: "Take back bikes", deadline: "2/7/2025", status: "completed" },
+  ],
+  "event-5": [
+    { id: "task-5", name: "Setup registration booth", deadline: "1/15/2025", status: "pending" },
+    { id: "task-6", name: "Distribute t-shirts", deadline: "1/15/2025", status: "pending" },
+    { id: "task-7", name: "Clean up area", deadline: "1/15/2025", status: "pending" },
+  ]
+};
+
 const Demo_leaderboard = [
   { name: "Sarah Johnson", points: 980 },
   { name: "John Doe", points: 850 },
@@ -42,15 +64,38 @@ const VolunteerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [subscribedEvents, setSubscribedEvents] = useState([]);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
+  const [userStats, setUserStats] = useState({
+    rank: '',
+    nextRank: '',
+    pointsForNextRank: 0,
+    eventsParticipated: 0,
+    volunteerHours: 0,
+    activeEvents: 0
+  });
 
   const fetchUserData = async () => {
     try {
       // This will be replaced with actual API call later
+      // INTEGRATION POINT: Replace the mock data with real API calls
       // const response = await fetch("https://api.example.com/user");
       // if (!response.ok) throw new Error("Failed to fetch user data");
-      // const data = await response.json();
-      // setUser(data.user);
-      // setLeaderboard(data.leaderboard);
+      // const userData = await response.json();
+      // 
+      // // Fetch registered events with tasks
+      // const eventsResponse = await fetch(`https://api.example.com/user/${userData.id}/events`);
+      // if (!eventsResponse.ok) throw new Error("Failed to fetch events data");
+      // const eventsData = await eventsResponse.json();
+      // 
+      // // Fetch leaderboard data
+      // const leaderboardResponse = await fetch("https://api.example.com/leaderboard");
+      // if (!leaderboardResponse.ok) throw new Error("Failed to fetch leaderboard data");
+      // const leaderboardData = await leaderboardResponse.json();
+      //
+      // setUser(userData);
+      // setLeaderboard(leaderboardData);
+      // setRegisteredEvents(eventsData);
+      // updateUserStats(eventsData, userData);
       
       // Using mock data for development
       setTimeout(() => {
@@ -61,7 +106,21 @@ const VolunteerDashboard = () => {
         const userEvents = allEvents.filter(event => Demo_user.subscribedEventIds.includes(event.id));
         setSubscribedEvents(userEvents);
         
+        // Create registered events with tasks
+        const eventsWithTasks = userEvents.map(event => ({
+          id: event.id,
+          title: event.title,
+          tasks: Demo_event_tasks[event.id] || []
+        }));
+        setRegisteredEvents(eventsWithTasks);
+        
+        // Update user stats
+        updateUserStats(eventsWithTasks, Demo_user);
+        
         setLoading(false);
+        
+        // Update login streak whenever a user logs in (dashboard loads)
+        updateUserLoginStreak(Demo_user.id);
       }, 1000);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -70,9 +129,126 @@ const VolunteerDashboard = () => {
     }
   };
 
+  // Function to update the user's login streak
+  const updateUserLoginStreak = async (userId: string) => {
+    try {
+      // Update login streak for this user
+      await updateLoginStreak(userId);
+      console.log("Login streak updated successfully");
+    } catch (error) {
+      console.error("Error updating login streak:", error);
+      // Non-critical error, don't disrupt the user experience
+    }
+  };
+
+  // Calculate user stats based on registered events and completed tasks
+  const updateUserStats = (events, userData) => {
+    if (!events || !userData) return;
+    
+    // INTEGRATION POINT: These calculations can be moved to the backend API
+    // when real API integration is implemented. The front-end would then just display
+    // the calculated values provided by the API.
+    
+    // Calculate total completed tasks
+    const completedTasks = events.reduce((total, event) => {
+      return total + event.tasks.filter(task => task.status === 'completed').length;
+    }, 0);
+    
+    // Calculate active events (events with pending tasks)
+    const activeEvents = events.filter(event => 
+      event.tasks.some(task => task.status === 'pending')
+    ).length;
+    
+    // Calculate volunteer hours (mock calculation - in real API this would come from backend)
+    // For demo: 2 hours per completed task
+    // IMPORTANT: When integrating with the real backend API, the hours should be provided by the API
+    // as they may be calculated based on more complex business logic
+    const volunteerHours = completedTasks * 2;
+    
+    // Update stats
+    setUserStats({
+      rank: userData.rank,
+      nextRank: userData.nextRank,
+      pointsForNextRank: userData.pointsForNextRank,
+      eventsParticipated: events.length,
+      volunteerHours: volunteerHours,
+      activeEvents: activeEvents
+    });
+    
+    // INTEGRATION POINT: When a task is completed, you may need to notify the backend
+    // This could be implemented in the handleTaskStatusChange function with a POST request
+    // Example:
+    // await fetch(`https://api.example.com/events/${eventId}/tasks/${taskId}`, {
+    //   method: 'PUT',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ status: isCompleted ? 'completed' : 'pending' })
+    // });
+  };
+
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  const handleTaskStatusChange = async (eventId, taskId, isCompleted) => {
+    try {
+      // INTEGRATION POINT: Update task status on the backend
+      // When API is ready, uncomment and modify this code:
+      // const response = await fetch(`https://api.example.com/events/${eventId}/tasks/${taskId}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ status: isCompleted ? 'completed' : 'pending' })
+      // });
+      // 
+      // if (!response.ok) {
+      //   throw new Error('Failed to update task status');
+      // }
+      
+      // Update activity data when task is completed/uncompleted
+      if (user?.id) {
+        const today = new Date().toISOString().split('T')[0];
+        try {
+          // Update user activity with the change
+          await updateUserActivity(user.id, today, isCompleted);
+          
+          // Note: In a real implementation, you might want to refresh 
+          // the activity calendar data here, but for performance reasons
+          // you might choose to do this less frequently
+        } catch (activityError) {
+          console.error("Failed to update activity data:", activityError);
+          // Not interrupting the main flow if just the activity update fails
+        }
+      }
+      
+      // Update local state
+      setRegisteredEvents(prevEvents => {
+        const updatedEvents = prevEvents.map(event => {
+          if (event.id === eventId) {
+            return {
+              ...event,
+              tasks: event.tasks.map(task => {
+                if (task.id === taskId) {
+                  return {
+                    ...task,
+                    status: isCompleted ? 'completed' : 'pending'
+                  };
+                }
+                return task;
+              })
+            };
+          }
+          return event;
+        });
+        
+        // Update user stats when task status changes
+        updateUserStats(updatedEvents, user);
+        
+        return updatedEvents;
+      });
+    } catch (error) {
+      console.error('Error updating task status:', error);
+      // You could add user notification here for failed task updates
+    }
+  };
 
   if (loading) {
     return (
@@ -107,48 +283,42 @@ const VolunteerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
+    <div className="min-h-screen bg-gradient-to-b from-white via-red-50 to-gray-50 dark:from-gray-900 dark:via-red-900/10 dark:to-gray-900 background-animate">
+      <Header user={user} />
       
-      <div className="container mx-auto px-4 py-8 pt-32 md:pt-36">
+      <div className="container mx-auto px-4 py-8 pt-32 md:pt-36 relative z-10">
         <WelcomeSection user={user} />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <div className="lg:col-span-2">
             <AchievementBadges user={user} />
-            <TaskSummary events={subscribedEvents} />
+            <TaskSummary events={registeredEvents} />
             
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-8 border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white">Your Events</h3>
-                <Link to="/events" className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-sm font-medium flex items-center">
-                  View All Events
-                  <ArrowRight className="h-4 w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {subscribedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
-                ))}
-              </div>
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-md p-6 mb-8 border border-red-100/40 dark:border-red-900/20">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Activity Calendar</h3>
+              <Heatmap userId={user?.id} />
             </div>
+            
+            <RegisteredEventsSection 
+              events={registeredEvents} 
+              onTaskStatusChange={handleTaskStatusChange} 
+            />
           </div>
           
           <div>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-8 border border-gray-100 dark:border-gray-700">
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-md p-6 mb-8 border border-red-100/40 dark:border-red-900/20">
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Stats Highlights</h3>
               
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Current Rank</span>
-                  <span className="font-bold text-gray-800 dark:text-white capitalize">{user.rank}</span>
+                  <span className="font-bold text-gray-800 dark:text-white capitalize">{userStats.rank}</span>
                 </div>
                 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-gray-600 dark:text-gray-400">Progress to {user.nextRank}</span>
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{user.pointsForNextRank} points needed</span>
+                    <span className="text-gray-600 dark:text-gray-400">Progress to {userStats.nextRank}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{userStats.pointsForNextRank} points needed</span>
                   </div>
                   <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
                     <div className="h-2 bg-red-600 rounded-full" style={{ width: '60%' }}></div>
@@ -157,78 +327,25 @@ const VolunteerDashboard = () => {
                 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Events Participated</span>
-                  <span className="font-bold text-gray-800 dark:text-white">{user.eventsVolunteered}</span>
+                  <span className="font-bold text-gray-800 dark:text-white">{userStats.eventsParticipated}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Volunteer Hours</span>
-                  <span className="font-bold text-gray-800 dark:text-white">{user.volunteerHour}</span>
+                  <span className="font-bold text-gray-800 dark:text-white">{userStats.volunteerHours}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Active Events</span>
-                  <span className="font-bold text-gray-800 dark:text-white">{subscribedEvents.length}</span>
+                  <span className="font-bold text-gray-800 dark:text-white">{userStats.activeEvents}</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-8 border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white">Leaderboard</h3>
-                <span className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">Top Volunteers</span>
-              </div>
-              
-              <div className="space-y-4">
-                {leaderboard.slice(0, 5).map((person, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 
-                    ${person.name === user.name ? 'bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30' : 'border border-transparent'}`}
-                  >
-                    <div className={`
-                      flex items-center justify-center w-10 h-10 rounded-full mr-3 
-                      ${index === 0 ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-500 border-2 border-yellow-400' : 
-                        index === 1 ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-2 border-gray-400' : 
-                        index === 2 ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-500 border-2 border-amber-400' : 
-                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'} 
-                      font-bold text-sm`}
-                    >
-                      {index + 1}
-                    </div>
-                    <div className="flex-grow">
-                      <p className={`font-medium ${person.name === user.name ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-white'}`}>
-                        {person.name}
-                      </p>
-                      <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full mt-1">
-                        <div 
-                          className={`h-1.5 rounded-full ${
-                            index === 0 ? 'bg-yellow-500' : 
-                            index === 1 ? 'bg-gray-500' : 
-                            index === 2 ? 'bg-amber-500' : 
-                            'bg-blue-500'}`
-                          } 
-                          style={{ width: `${(person.points / leaderboard[0].points) * 100}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="text-gray-600 dark:text-gray-400 font-medium flex flex-col items-end">
-                      <span className="text-lg">{person.points}</span>
-                      <span className="text-xs text-gray-500">points</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <button className="w-full mt-6 text-red-600 dark:text-red-400 text-sm font-medium border border-red-200 dark:border-red-900/30 rounded-lg py-2 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
-                View Full Leaderboard
-              </button>
-            </div>
+            {user?.id && <StreakDisplay userId={user.id} />}
+            
+            <Leaderboard currentUserId={user?.id} />
           </div>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-8 border border-gray-100 dark:border-gray-700">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Activity Calendar</h3>
-          <Heatmap data={null} />
         </div>
       </div>
       

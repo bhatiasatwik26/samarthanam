@@ -11,6 +11,8 @@ import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 import SignIn from "./pages/SignIn";
 import { VolunteerDashboard } from "./pages/volunteer";
+import BadgesPage from "./pages/volunteer/BadgesPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -34,6 +36,8 @@ const App = () => {
             <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
+            <Route path="/badges" element={<BadgesPage />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/about" element={<About />} />

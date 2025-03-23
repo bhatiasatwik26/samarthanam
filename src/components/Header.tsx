@@ -1,17 +1,43 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Moon, Sun } from 'lucide-react';
+import { Menu, X, Moon, Sun, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import ProfileButton from './ProfileButton';
 
 interface HeaderProps {
   isAdmin?: boolean;
+  user?: any;
 }
 
-export const Header = ({ isAdmin = false }: HeaderProps) => {
+export const Header = ({ isAdmin = false, user }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if user is on volunteer dashboard or badges page
+  const isLoggedIn = location.pathname === '/volunteer-dashboard' || 
+                     location.pathname === '/badges' ||
+                     location.pathname === '/admin-dashboard';
+
+  // Mock user data for development (will be replaced with actual user data)
+  const mockUser = {
+    id: "001",
+    name: "John Doe",
+    email: "john.doe@example.com",
+    rank: "gold",
+    nextRank: "platinum",
+    pointsForNextRank: 250,
+    eventsVolunteered: 12,
+    volunteerHour: 48,
+    phone: "+1 (555) 123-4567",
+    location: "Bangalore, India"
+  };
+
+  // Use provided user or fallback to mock user
+  const currentUser = user || mockUser;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +58,12 @@ export const Header = ({ isAdmin = false }: HeaderProps) => {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+  
+  const handleLogout = () => {
+    // In a real app, you would clear authentication tokens, cookies, etc.
+    // For now, just redirect to home page
+    navigate('/');
+  };
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -81,6 +113,20 @@ export const Header = ({ isAdmin = false }: HeaderProps) => {
                   {link.name}
                 </Link>
               ))}
+              {isLoggedIn && (
+                <>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="px-6 py-2 rounded-full border-red-600 hover:bg-red-800 text-red-600 hover:text-white font-medium transition-colors shadow-sm hover:shadow-md flex items-center"
+                    aria-label="Log out"
+                  >
+                    <LogOut size={18} className="mr-2" />
+                    Logout
+                  </Button>
+                  <ProfileButton user={currentUser} />
+                </>
+              )}
               <Button
                 onClick={toggleDarkMode}
                 variant="outline"
@@ -106,6 +152,20 @@ export const Header = ({ isAdmin = false }: HeaderProps) => {
                   {link.name}
                 </Link>
               ))}
+              {isLoggedIn && (
+                <>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="px-6 py-2 rounded-full border-red-600 hover:bg-red-800 text-red-600 hover:text-white font-medium transition-colors shadow-sm hover:shadow-md flex items-center"
+                    aria-label="Log out"
+                  >
+                    <LogOut size={18} className="mr-2" />
+                    Logout
+                  </Button>
+                  <ProfileButton user={currentUser} />
+                </>
+              )}
               <Button
                 onClick={toggleDarkMode}
                 variant="outline"
@@ -120,6 +180,20 @@ export const Header = ({ isAdmin = false }: HeaderProps) => {
 
           {/* Mobile Menu Button - For both admin and regular pages */}
           <div className="md:hidden flex items-center gap-2">
+            {isLoggedIn && (
+              <>
+                <ProfileButton user={currentUser} />
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full h-10 w-10 border-red-600 text-red-600 hover:bg-red-800 hover:text-white"
+                  aria-label="Log out"
+                >
+                  <LogOut size={20} />
+                </Button>
+              </>
+            )}
             <Button
               onClick={toggleDarkMode}
               variant="outline"
@@ -154,6 +228,17 @@ export const Header = ({ isAdmin = false }: HeaderProps) => {
                   {link.name}
                 </Link>
               ))}
+              {isLoggedIn && (
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="px-6 py-2 rounded-full border-red-600 hover:bg-red-800 text-red-600 hover:text-white font-medium transition-colors shadow-sm hover:shadow-md flex items-center justify-center"
+                  aria-label="Log out"
+                >
+                  <LogOut size={18} className="mr-2" />
+                  Logout
+                </Button>
+              )}
             </nav>
           </div>
         )}
