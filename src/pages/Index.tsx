@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 
 const Index = () => {
   useEffect(() => {
+    // Simple fade-in animation for sections
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -24,7 +25,7 @@ const Index = () => {
     };
   }, []);
 
-  // Background image for the hero section
+  // Background image for the hero section with error handling
   const heroImageUrl = "https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2070&auto=format&fit=crop";
 
   // Date for the upcoming event (30 days from now)
