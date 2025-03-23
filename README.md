@@ -1,5 +1,3 @@
-# Eventitopia
-
 A comprehensive event management and volunteer coordination platform built with React, TypeScript, and Tailwind CSS.
 
 ## Project Structure
