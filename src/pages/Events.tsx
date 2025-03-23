@@ -7,30 +7,49 @@ import {
   Search, Filter, Star, TrendingUp, ArrowUpRight, AlarmClock 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { events } from '@/data/events';
+import { Event } from '@/data/events';
 import Header from '@/components/Header';
 import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue, 
-} from "@/components/ui/select";
-
-// Create categories based on event subtitles
-const eventCategories = ["All", ...new Set(events.map(event => event.subtitle))];
+import { fetchEvents, registerForEvent } from '@/services/eventsApi';
 
 const Events = () => {
   const { ref, isVisible } = useInView();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Create categories based on event subtitles
+  const eventCategories = useMemo(() => 
+    ["All", ...new Set(events.map(event => event.subtitle))], 
+    [events]
+  );
+
+  // Fetch events from API
+  useEffect(() => {
+    const getEvents = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchEvents();
+        setEvents(data);
+        setError(null);
+      } catch (err) {
+        setError("Failed to load events. Please try again later.");
+        console.error("Error fetching events:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getEvents();
+  }, []);
 
   // Featured events (first 2 events)
-  const featuredEvents = useMemo(() => events.slice(0, 2), []);
+  const featuredEvents = useMemo(() => events.slice(0, 2), [events]);
   
   // Filter events based on category and search query
   const filteredEvents = useMemo(() => {
@@ -41,7 +60,7 @@ const Events = () => {
                           event.location.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, events]);
 
   // Get upcoming events (events with future dates)
   const upcomingEvents = useMemo(() => {
@@ -63,6 +82,61 @@ const Events = () => {
     if (activeTab === "upcoming") return upcomingEvents;
     return filteredEvents;
   }, [activeTab, filteredEvents, upcomingEvents]);
+
+  // Handle event registration
+  const handleRegister = async (eventId: string) => {
+    try {
+      // In a real app, you'd get the userId from auth context
+      const userId = "user123"; 
+      const result = await registerForEvent(eventId, userId);
+      
+      if (result.success) {
+        // Show success notification or redirect to confirmation page
+        console.log(result.message);
+        alert("Registration successful! You are now registered for this event.");
+      }
+    } catch (err) {
+      console.error("Registration failed:", err);
+      alert("Registration failed. Please try again later.");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-6 pt-32">
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-6 pt-32">
+          <div className="text-center py-20">
+            <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
+              <Filter className="h-8 w-8 text-red-400" />
+            </div>
+            <h3 className="text-xl font-medium mb-2 dark:text-white">Error Loading Events</h3>
+            <p className="text-red-800 dark:text-red-200">{error}</p>
+            <Button 
+              variant="outline" 
+              className="mt-4 border-red-300 text-red-600 hover:bg-red-100 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-800/30"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,24 +161,26 @@ const Events = () => {
             {/* Search & Filter */}
             <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-                <Input 
-                  placeholder="Search events..." 
-                  className="pl-10 bg-white dark:bg-red-950 border-red-200 dark:border-red-800"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                <div className="relative w-full">
+                  <Input
+                    type="text"
+                    placeholder="Search events..."
+                    className="w-full pl-10 bg-white dark:bg-slate-800 border-red-200 dark:border-red-800/50 focus:border-red-500 dark:focus:border-red-400"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
+                </div>
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full md:w-[180px] bg-white dark:bg-red-950">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {eventCategories.map((category) => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select
+                className="w-full md:w-[180px] bg-white dark:bg-red-950 h-10 rounded-md border border-red-200 dark:border-red-800/50 px-3 py-2 text-sm focus:outline-none focus:border-red-500 dark:focus:border-red-400"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                {eventCategories.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -113,6 +189,113 @@ const Events = () => {
         <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-red-200/30 dark:bg-red-500/10 blur-xl"></div>
         <div className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-rose-200/40 dark:bg-rose-500/10 blur-xl"></div>
         <div className="absolute -bottom-5 left-1/4 w-72 h-72 rounded-full bg-orange-200/20 dark:bg-orange-500/10 blur-xl"></div>
+      </section>
+
+      {/* Browse Events */}
+      <section className="py-16" ref={ref}>
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center mb-10">
+            <div>
+              <div className="flex items-center gap-2">
+                <TrendingUp className="text-red-500 w-5 h-5" />
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-red-950 dark:text-white">
+                  Browse Events
+                </h2>
+              </div>
+              <p className="text-red-800 mt-2 dark:text-red-200">
+                {displayedEvents.length} events available
+              </p>
+            </div>
+            
+            {/* Tabs */}
+            <div className="flex overflow-hidden rounded-md border border-red-200 dark:border-red-800">
+              <button 
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'all' 
+                  ? 'bg-red-600 text-white' 
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-100 dark:hover:bg-red-800'}`}
+                onClick={() => setActiveTab('all')}
+              >
+                All Events
+              </button>
+              <button 
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'upcoming' 
+                  ? 'bg-red-600 text-white' 
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-100 dark:hover:bg-red-800'}`}
+                onClick={() => setActiveTab('upcoming')}
+              >
+                Upcoming
+              </button>
+            </div>
+          </div>
+
+          {/* Event Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedEvents.map((event) => (
+              <Card key={event.id} className="overflow-hidden group border-red-200 dark:border-red-800 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-xl">
+                <div className="aspect-video relative overflow-hidden">
+                  <img 
+                    src={event.imageUrl} 
+                    alt={event.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-red-600/90 hover:bg-red-700/90 backdrop-blur-sm text-white">
+                      {event.subtitle}
+                    </Badge>
+                  </div>
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-xl font-serif group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                    {event.title}
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2 mt-2 text-red-800 dark:text-slate-400">
+                    {event.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center text-slate-600 dark:text-slate-300">
+                      <CalendarIcon size={16} className="mr-2 text-red-500" />
+                      <span>{event.date}</span>
+                    </div>
+                    <div className="flex items-center text-slate-600 dark:text-slate-300">
+                      <Clock size={16} className="mr-2 text-red-500" />
+                      <span>{event.time}</span>
+                    </div>
+                    <div className="flex items-center text-slate-600 dark:text-slate-300">
+                      <MapPin size={16} className="mr-2 text-red-500" />
+                      <span>{event.location}</span>
+                    </div>
+                    <div className="flex items-center text-slate-600 dark:text-slate-300">
+                      <Users size={16} className="mr-2 text-red-500" />
+                      <span>Participants required: {20 + Math.floor(Math.random() * 30)}</span>
+                    </div>
+                    <div className="flex items-center text-slate-600 dark:text-slate-300">
+                      <AlarmClock size={16} className="mr-2 text-red-500" />
+                      <span>Registration deadline: {new Date(new Date(event.date.split('-')[0].trim()).getTime() - 7*24*60*60*1000).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex flex-col space-y-3 sm:flex-row sm:justify-between sm:space-y-0 pt-0">
+                  <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
+                    <Heart size={16} className="mr-1 text-red-500" />
+                    <span>Support this cause</span>
+                  </div>
+                  <Button 
+                    asChild
+                    variant="default"
+                    className="w-full sm:w-auto bg-red-600 hover:bg-red-800 text-white transition-colors"
+                  >
+                    <Link to={`/event/${event.id}`} className="flex items-center justify-center">
+                      Register <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Featured Events */}
@@ -173,7 +356,7 @@ const Events = () => {
                         </div>
                         <div className="flex items-center text-slate-600 dark:text-slate-300">
                           <MapPin size={16} className="mr-2 text-red-500" />
-                          <span>{event.location.includes("Karnataka") ? event.location : "Bengaluru, Karnataka"}</span>
+                          <span>{event.location}</span>
                         </div>
                         <div className="flex items-center text-slate-600 dark:text-slate-300">
                           <Users size={16} className="mr-2 text-red-500" />
@@ -187,7 +370,7 @@ const Events = () => {
                     </div>
                     <div className="mt-6">
                       <Button 
-                        asChild 
+                        asChild
                         className="w-full bg-red-600 hover:bg-red-800 text-white transition-colors"
                       >
                         <Link to={`/event/${event.id}`} className="flex items-center justify-center">
@@ -200,160 +383,6 @@ const Events = () => {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Events List */}
-      <section className="py-16" ref={ref}>
-        <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center mb-10">
-            <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="text-red-500 w-5 h-5" />
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-red-950 dark:text-white">
-                  Browse Events
-                </h2>
-              </div>
-              <p className="text-red-800 mt-2 dark:text-red-200">
-                {displayedEvents.length} events available
-              </p>
-            </div>
-            
-            {/* Tabs */}
-            <div className="flex border border-red-200 dark:border-red-700 rounded-lg overflow-hidden">
-              <button 
-                className={`px-4 py-2 text-sm font-medium ${activeTab === 'all' 
-                  ? 'bg-red-600 text-white' 
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-100 dark:hover:bg-red-800'}`}
-                onClick={() => setActiveTab('all')}
-              >
-                All Events
-              </button>
-              <button 
-                className={`px-4 py-2 text-sm font-medium ${activeTab === 'upcoming' 
-                  ? 'bg-red-600 text-white' 
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-100 dark:hover:bg-red-800'}`}
-                onClick={() => setActiveTab('upcoming')}
-              >
-                Upcoming
-              </button>
-            </div>
-          </div>
-
-          {displayedEvents.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
-                <Filter className="h-8 w-8 text-red-400" />
-              </div>
-              <h3 className="text-xl font-medium mb-2 dark:text-white">No events found</h3>
-              <p className="text-red-800 dark:text-red-200">Try adjusting your filters or search term</p>
-              <Button 
-                variant="outline" 
-                className="mt-4 border-red-300 text-red-600 hover:bg-red-100 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-800/30"
-                onClick={() => {
-                  setSelectedCategory("All");
-                  setSearchQuery("");
-                }}
-              >
-                Clear filters
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {displayedEvents.map((event, index) => (
-                <Card 
-                  key={event.id}
-                  className={cn(
-                    "overflow-hidden group border-red-200 dark:border-red-800 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-xl",
-                    isVisible 
-                      ? "opacity-100 translate-y-0" 
-                      : "opacity-0 translate-y-12",
-                    { 
-                      "transition-delay-100": index % 3 === 0, 
-                      "transition-delay-200": index % 3 === 1, 
-                      "transition-delay-300": index % 3 === 2 
-                    }
-                  )}
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img 
-                      src={event.imageUrl} 
-                      alt={event.title} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-red-600/90 hover:bg-red-700/90 backdrop-blur-sm text-white">
-                        {event.subtitle}
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl font-serif group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                      {event.title}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 mt-2 text-red-800 dark:text-slate-400">
-                      {event.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-center text-slate-600 dark:text-slate-300">
-                        <CalendarIcon size={16} className="mr-2 text-red-500" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="flex items-center text-slate-600 dark:text-slate-300">
-                        <Clock size={16} className="mr-2 text-red-500" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center text-slate-600 dark:text-slate-300">
-                        <MapPin size={16} className="mr-2 text-red-500" />
-                        <span>{
-                          index % 5 === 0 ? "Mysuru, Karnataka" :
-                          index % 5 === 1 ? "Mangaluru, Karnataka" :
-                          index % 5 === 2 ? "Hampi, Karnataka" :
-                          index % 5 === 3 ? "Coorg, Karnataka" :
-                          "Udupi, Karnataka"
-                        }</span>
-                      </div>
-                      <div className="flex items-center text-slate-600 dark:text-slate-300">
-                        <Users size={16} className="mr-2 text-red-500" />
-                        <span>Participants required: {50 + (index * 10)}</span>
-                      </div>
-                      <div className="flex items-center text-slate-600 dark:text-slate-300">
-                        <AlarmClock size={16} className="mr-2 text-red-500" />
-                        <span>Registration deadline: {new Date(new Date(event.date).getTime() - 10*24*60*60*1000).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex flex-col space-y-3 sm:flex-row sm:justify-between sm:space-y-0 pt-0">
-                    <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
-                      <Heart size={16} className="mr-1 text-red-500" />
-                      <span>Support this cause</span>
-                    </div>
-                    <Button 
-                      asChild 
-                      variant="default"
-                      className="w-full sm:w-auto bg-red-600 hover:bg-red-800 text-white transition-colors"
-                    >
-                      <Link to={`/event/${event.id}`} className="flex items-center justify-center">
-                        Register <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
-          
-          {/* Show more button if needed */}
-          {displayedEvents.length > 6 && (
-            <div className="text-center mt-12">
-              <Button variant="outline" className="mx-auto border-red-200 text-red-600 hover:bg-red-100 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-800/30">
-                Load more events
-              </Button>
-            </div>
-          )}
         </div>
       </section>
       

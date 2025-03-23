@@ -205,7 +205,7 @@ const Contact = () => {
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select a subject" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="max-h-60 overflow-y-auto" position="popper" align="start" side="bottom" sideOffset={5}>
                           <SelectItem value="general">General Inquiry</SelectItem>
                           <SelectItem value="volunteer">Volunteering</SelectItem>
                           <SelectItem value="donation">Donation</SelectItem>

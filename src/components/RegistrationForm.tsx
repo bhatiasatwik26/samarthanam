@@ -4,18 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 interface RegistrationFormProps {
   title: string;
   subtitle: string;
+  onSubmit?: () => void;
 }
 
 const RegistrationForm = ({
   title,
   subtitle,
+  onSubmit
 }: RegistrationFormProps) => {
   const { ref, isVisible } = useInView();
   const [loading, setLoading] = useState(false);
@@ -30,6 +31,11 @@ const RegistrationForm = ({
       toast.success('Registration submitted successfully!', {
         description: 'We will contact you with further details.',
       });
+      
+      // Call the onSubmit callback if provided
+      if (onSubmit) {
+        onSubmit();
+      }
     }, 1500);
   };
 
@@ -105,17 +111,16 @@ const RegistrationForm = ({
 
               <div className="space-y-2">
                 <Label htmlFor="participationType">Participation Type</Label>
-                <Select>
-                  <SelectTrigger className="rounded-md border-gray-300/50 focus:border-red-600 focus:ring-red-600/20">
-                    <SelectValue placeholder="Select participation type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="individual">Individual</SelectItem>
-                    <SelectItem value="team">Team (5-10 members)</SelectItem>
-                    <SelectItem value="corporate">Corporate Team</SelectItem>
-                    <SelectItem value="volunteer">Volunteer</SelectItem>
-                  </SelectContent>
-                </Select>
+                <select
+                  id="participationType"
+                  className="w-full rounded-md border border-gray-300/50 p-2 focus:border-red-600 focus:ring-red-600/20 focus:outline-none"
+                >
+                  <option value="" disabled selected>Select participation type</option>
+                  <option value="individual">Individual</option>
+                  <option value="team">Team (5-10 members)</option>
+                  <option value="corporate">Corporate Team</option>
+                  <option value="volunteer">Volunteer</option>
+                </select>
               </div>
 
               <div className="space-y-2">
