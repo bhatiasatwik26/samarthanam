@@ -1,10 +1,8 @@
 import express from "express";
-import { getUserById, sendMail, getLeaderboard } from "../controllers/user.controller.js"; // Import controller
+import { getUserById, getLeaderboard } from "../controllers/user.controller.js"; // Import controller
 
 const router = express.Router();
 
-// send mail
-router.get("/sendMail", sendMail);
 
 // get leaderboard
 router.get("/leaderboard", getLeaderboard);

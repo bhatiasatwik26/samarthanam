@@ -1,6 +1,5 @@
 import User from "../model/User.model.js"; // Adjust path if needed
 import mongoose from "mongoose";
-import nodemailer from 'nodemailer'
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
@@ -43,31 +42,3 @@ export const getLeaderboard = async (req, res) => {
   };
 
 
-export const sendMail = async (req, res) =>{
-    try {
-        // Create a Nodemailer transporter
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER, 
-                pass: process.env.GMAIL_PASSWORD,
-            },
-        });
-
-        // Email details
-        const mailOptions = {
-            from: process.env.GMAIL_USER,
-            to: 'satyamkathait.s.k@gmail.com', // TODO: replace with email attached with request
-            subject: 'Event Participation!',
-            text: 'Hello, Thank you for registering in the event!',
-        };
-
-        // Send mail
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Email sent successfully!' });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to send email' });
-    }
-};

@@ -5,3 +5,20 @@ To run the backend server
 
 Adding websocket-:
 npm install socket.io
+
+To send mail 
+POST -: http://localhost:5000/api/email/send
+
+req.body-:
+{                                                   // for registrationSuccess
+    "email": "testuser@example.com",
+    "emailType": "registrationSuccess",
+    "params": ["John Doe"]
+}
+
+{                                                  // for taskDeadlineReminder
+    "email": "testuser@example.com",
+    "emailType": "taskDeadlineReminder",
+    "params": ["John Doe", "Prepare Event Materials", "March 30, 2025"]
+}
+

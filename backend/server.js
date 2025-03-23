@@ -7,6 +7,7 @@ import connectDB from './config/db.config.js';
 import socketConfig from './config/socket.config.js';// Import socket configuration
 import userRoutes from "./routes/user.route.js";
 import eventRoutes from "./routes/event.route.js";
+import emailRoutes from "./routes/email.routes.js";
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +23,7 @@ const server = http.createServer(app);  // here i wraps express server inside ht
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // Initialize WebSocket
@@ -30,7 +32,8 @@ socketConfig(server);
 // Routes 
 
 app.use("/api/users", userRoutes); // user routes
-app.use("/api/events", eventRoutes);
+app.use("/api/events", eventRoutes);    // event route
+app.use("/api/email", emailRoutes); // email route
 
 app.get('/', (req, res) => {
     res.send('API is running...');

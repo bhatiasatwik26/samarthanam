@@ -19,6 +19,13 @@ const eventSchema = new mongoose.Schema({
         status: { type: String, enum: ["pending", "completed"], default: "pending" },
         },
     ],
+    schedule: [
+        {
+            time: { type: String, required: true }, // e.g., "8:00 AM"
+            heading: { type: String, required: true }, // e.g., "Registration & Check-in"
+            details: { type: String, required: true }, // e.g., "Arrive early to complete your registration..."
+        }
+    ],
     });
 
 const Event = mongoose.model('Event', eventSchema);
