@@ -354,13 +354,14 @@ const Events = () => {
                       <AlarmClock size={16} className="mr-2 text-red-500" />
                       <span>
                         Registration deadline:{" "}
-                        {/* {new Date(
-                          event.date.getTime() - 7 * 24 * 60 * 60 * 1000
+                        {new Date(
+                          new Date(event.date).getTime() -
+                            7 * 24 * 60 * 60 * 1000
                         ).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
                           year: "numeric",
-                        })} */}
+                        })}
                       </span>
                     </div>
                   </div>
@@ -376,7 +377,7 @@ const Events = () => {
                     className="w-full sm:w-auto bg-red-600 hover:bg-red-800 text-white transition-colors"
                   >
                     <Link
-                      to={`/event/${event.id}`}
+                      to={`/event/${event._id}`}
                       className="flex items-center justify-center"
                     >
                       Register <ArrowRight className="ml-2 h-4 w-4" />
