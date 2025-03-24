@@ -70,3 +70,46 @@ export const getLeaderboard = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const updateTaskStatus = async (req, res) => {
+  try {
+    const { userId, eventId, taskName, status } = req.body;
+    console.log(req.body);
+
+    // Validate input
+    if (!userId || !eventId || !taskName || !status) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find the event inside eventsSubscribed
+    const event = user.eventsSubscribed.find(
+      (event) => event.eventId.toString() === eventId
+    );
+    if (!event) {
+      return res.status(404).json({ message: "Event not found for this user" });
+    }
+
+    // Find the task inside assignedTasks
+    const task = event.assignedTasks.find((task) => task.name === taskName);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found in this event" });
+    }
+
+    // Update task status
+    task.status = status;
+
+    // Save the updated user
+    await user.save();
+
+    res.json({ message: "Task status updated successfully", user });
+  } catch (error) {
+    console.error("Error updating task status:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

@@ -9,7 +9,9 @@ interface LeaderboardProps {
   currentUserId?: string;
 }
 
-export const Leaderboard: React.FC<LeaderboardProps> = ({ currentUserId }) => {
+export const Leaderboard: React.FC<LeaderboardProps> = ({
+  currentUserId: string,
+}) => {
   const {
     data: leaderboardData = [],
     isLoading,
@@ -19,7 +21,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ currentUserId }) => {
     queryFn: fetchLeaderboardData,
     select: (data) => data || [],
   });
-  console.log(leaderboardData);
 
   const maxPoints =
     leaderboardData.length > 0
@@ -79,7 +80,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ currentUserId }) => {
       <div className="space-y-3">
         {leaderboardData.map((person) => (
           <div
-            key={person.position}
+            key={person.name}
             className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 
             ${
               person.position === 1

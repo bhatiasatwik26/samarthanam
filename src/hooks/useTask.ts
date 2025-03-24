@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
-
+import { User, EventsSubscribed } from "@/types/user";
 const updateTaskStatus = async ({ userId, eventId, taskName, status }) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/task/update`,
+    "http://localhost:3000/api/user/update-task-status",
     {
       method: "PUT",
       headers: {
@@ -26,15 +26,42 @@ export const useUpdateTask = () => {
 
   return useMutation({
     mutationFn: updateTaskStatus,
-    onSuccess: (data) => {
+
+    onSuccess: (updatedTask, variables) => {
       toast({
         title: "Success",
         description: "Task status updated successfully",
         variant: "default",
       });
 
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      // Optimistically update the userData cache
+      queryClient.setQueryData<{
+        user: User["user"];
+        subscribedEvents: EventsSubscribed[];
+      }>(["userData"], (oldData) => {
+        if (!oldData) return oldData;
+
+        // Map through the subscribedEvents and update the task status
+        const updatedEvents = oldData.subscribedEvents.map((event) => {
+          if (event.eventId === variables.eventId) {
+            const updatedTasks = event.assignedTasks.map((task) =>
+              task.name === variables.taskName
+                ? { ...task, status: updatedTask.status }
+                : task
+            );
+
+            return { ...event, assignedTasks: updatedTasks };
+          }
+          return event;
+        });
+
+        return { ...oldData, subscribedEvents: updatedEvents };
+      });
+
+      // Invalidate to refetch the latest data in the background
+      queryClient.invalidateQueries({ queryKey: ["userData"] });
     },
+
     onError: (error) => {
       toast({
         title: "Error",

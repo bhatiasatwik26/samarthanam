@@ -1,6 +1,5 @@
-import Event from '../model/Event.model.js';
+import Event from "../model/Event.model.js";
 
-// Get all events
 export const getEvents = async (req, res) => {
   try {
     const events = await Event.find();
@@ -10,7 +9,6 @@ export const getEvents = async (req, res) => {
   }
 };
 
-// Get event by ID
 export const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);

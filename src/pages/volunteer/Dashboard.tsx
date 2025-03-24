@@ -91,10 +91,10 @@ const VolunteerDashboard = () => {
               <Heatmap data={user.heatmapActivity} />
             </div>
 
-            {/* <RegisteredEventsSection
+            <RegisteredEventsSection
               events={subscribedEvents}
-              onTaskStatusChange={handleTaskStatusChange}
-            /> */}
+              userID={user.id}
+            />
           </div>
 
           <div>
